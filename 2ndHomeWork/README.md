@@ -1,69 +1,60 @@
-1.Introduction
+### 1. Introduction
+In this study, feature extraction and classification were performed on image data using Convolutional Neural Networks. The CIFAR-10 benchmark dataset, containing 10 different object classes, was selected for this task. The scope of the work includes a comparative analysis of a custom-designed architecture based on LeNet-5, a deeper version with optimized hyperparameters (Improved CNN), and the well-established AlexNet architecture utilizing transfer learning. Additionally, a hybrid classification system was designed by training a canonical machine learning model, Support Vector Machines (SVM), using the feature sets obtained from the Improved CNN feature extraction mechanism. This report examines the theoretical frameworks, experimental results, and relative advantages of the developed architectures.
 
-Bu çalışmada, Evrişimli Sinir Ağları (CNN) kullanılarak görüntü verileri üzerinden özellik çıkarma ve sınıflandırma işlemleri gerçekleştirilmiştir. Problem için 10 farklı nesne sınıfı içeren CIFAR-10 benchmark veri seti seçilmiştir. Çalışma kapsamında; sıfırdan tasarlanan temel bir LeNet-5 benzeri mimari, hiperparametreleri optimize edilip derinleştirilmiş bir versiyonu ve literatürde kendini kanıtlamış AlexNet mimarisi transfer öğrenme yöntemiyle karşılaştırmalı olarak analiz edilmiştir. Ayrıca, tam bir CNN mimarisinin özellik çıkarımı mekanizması kullanılarak elde edilen özellik setleri kanonik bir makine öğrenmesi modeli (Destek Vektör Makineleri) ile eğitilmiş ve hibrit bir sınıflandırma sistemi tasarlanmıştır. Bu rapor, geliştirilen modellerin teorik altyapılarını, deneysel sonuçlarını ve birbirlerine karşı olan üstünlüklerini incelemektedir.
-2.Method
+### 2. Method
+The project was designed following reproducibility principles, and the dataset was configured to be downloaded dynamically at runtime instead of being hosted in the GitHub repository.
 
-Proje, tekrarlanabilirlik ilkesine uygun olarak tasarlanmış ve veri seti GitHub deposunda barındırılmak yerine kod çalıştığı anda dinamik olarak indirilecek şekilde yapılandırılmıştır.
+**2.1. Dataset and Preprocessing**
+The CIFAR-10 dataset, consisting of 32x32 pixel RGB images, was used. To prevent overfitting, aggressive data augmentation was applied to the training set through Random Crop, Random Horizontal Flip, and Random Rotation. Data were normalized on a per-channel basis before being fed into the architectures.
 
-2.1. Veri Seti ve Ön İşleme: Çalışmada 32x32 piksel boyutlarında RGB formatlı CIFAR-10 veri seti kullanılmıştır. Modelin aşırı öğrenmesini (overfitting) engellemek amacıyla eğitim setine rastgele kırpma (RandomCrop), yatay çevirme (RandomHorizontalFlip) ve döndürme (RandomRotation) işlemleri uygulanarak agresif bir veri artırımı (Data Augmentation) yapılmıştır. Veriler modele verilmeden önce kanal bazında normalize edilmiştir.
+**2.2. Architectures and Theoretical Framework**
 
-2.2. Model Mimarileri ve Teorik Altyapı:
+* **Base CNN:** This architecture consists of 2 convolutional layers, 2 max-pooling layers, and 3 linear layers, inspired by the LeNet-5 design. Convolutional layers extract local features such as edges and textures, while pooling layers reduce dimensions to decrease computational load and provide spatial invariance.
+* **Improved CNN:** The capacity of the base architecture was increased to 3 convolutional blocks with 32, 64, and 128 filters. To ensure stability, Batch Normalization was applied after each convolution, and Dropout layers with a 0.3 rate were added between fully connected layers to prevent memorization.
+* **Pretrained AlexNet:** The pretrained AlexNet model from the torchvision library was utilized. The initial feature extraction layers were frozen to avoid catastrophic forgetting, and only the final classifier layer was modified and trained for the 10 CIFAR-10 classes. CIFAR-10 images were scaled to 224x224 dimensions using interpolation.
+* **Hybrid CNN and SVM System:** Tensors passing through the feature extraction part of the Improved CNN were saved to disk in npy format (Training: 50000x2048, Test: 10000x2048). These vectors were fed into a LinearSVC algorithm, which draws a linear decision boundary and is optimized for large datasets.
 
-   Base CNN: Temel LeNet-5 modeline benzer şekilde 2 evrişimli katman (Conv2d), 2 havuzlama (MaxPool2d) ve 3 tam bağlantılı (Linear) katmandan oluşmaktadır. Evrişim katmanları görüntüdeki bölgesel özellikleri (kenarlar, dokular) çıkarırken, havuzlama katmanları boyut azaltarak (downsampling) ağın işlem yükünü hafifletir ve konumsal değişmezlik (spatial invariance) sağlar.
+**2.3. Training Parameters**
+The architectures were trained in a CPU environment using Cross-Entropy Loss and the Adam optimizer for 30 epochs. To ensure stable progress on the loss surface, a StepLR scheduler was used to reduce the learning rate by half every 10 epochs, starting from an initial rate of 0.001.
 
-   Improved CNN: Model 1'in kapasitesi artırılarak 3 evrişim bloğuna (32, 64 ve 128 filtreli) çıkarılmıştır. Ağın stabilitesini artırmak için her evrişimden sonra BatchNorm2d (Toplu Normalizasyon) kullanılmış, tam bağlantılı katmanlar arasına ise nöronların %30'unu rastgele kapatarak ağın ezberlemesini önleyen Dropout(0.3) katmanları eklenmiştir.
+### 3. Results
+The accuracy rates at the end of the training processes are presented in Table 1. The AlexNet architecture was trained for 5 epochs to preserve its pretrained weights.
 
-   Pretrained AlexNet: PyTorch torchvision.models modülünden önceden eğitilmiş (pretrained) AlexNet modeli kullanılmıştır. Modelin özellik çıkaran ilk katmanları "Catastrophic Forgetting" (yıkıcı unutma) problemini önlemek için dondurulmuş, sadece son sınıflandırıcı katmanı CIFAR-10'a (10 sınıf) uygun şekilde değiştirilerek eğitilmiştir. CIFAR-10 görüntüleri interpolate metoduyla ağın beklediği 224x224 boyutuna ölçeklenmiştir.
+**Table 1: Training and Test Accuracy Rates**
 
-   Hibrit Sistem - CNN + SVM: Model 2'nin özellik çıkarma kısmından (Flatten sonrası) geçen tensörler npy formatında (Eğitim: 50000x2048, Test: 10000x2048) diske kaydedilmiştir. Bu vektörler, doğrusal (linear) bir karar sınırı çizen ve büyük veri setleri için optimize edilmiş LinearSVC (Destek Vektör Makineleri) algoritmasına beslenerek sınıflandırma yapılmıştır.
-
-2.3. Eğitim Parametreleri: Modeller CPU ortamında, çapraz entropi (CrossEntropyLoss) kayıp fonksiyonu ve Adam optimizasyon algoritması kullanılarak 30 epoch boyunca eğitilmiştir. Ağların kayıp yüzeyinde daha kararlı ilerlemesi için her 10 epoch'ta öğrenme hızını (başlangıç: 0.001) yarıya düşüren StepLR zamanlayıcısı kullanılmıştır.
-3.Results
-
-Modellerin eğitim süreçleri sonundaki doğruluk oranları Tablo 1'de sunulmuştur. AlexNet mimarisi, önceden eğitilmiş ağırlıklarının bozulmaması amacıyla yalnızca 5 epoch eğitilmiştir.
-
-**Tablo 1: Modellerin Test ve Eğitim Doğruluk Oranları**
-
-| Model | Parametre Optimizasyonu | Eğitim Doğruluğu | Test Doğruluğu |
+| Model | Parameter Optimization | Training Accuracy | Test Accuracy |
 | :--- | :--- | :---: | :---: |
-| **Base CNN** | 30 Epoch, StepLR | %71.30 | %73.11 |
-| **Improved CNN** | 30 Epoch, StepLR | %78.73 | %81.40 |
-| **AlexNet** | 5 Epoch (Frozen Features) | %89.70 | %88.16 |
-| **Hibrit: CNN + SVM** | LinearSVC (C=0.1) | - | %78.05 |
+| **Base CNN** | 30 Epochs, StepLR | 71.30% | 73.11% |
+| **Improved CNN** | 30 Epochs, StepLR | 78.73% | 81.40% |
+| **Pretrained AlexNet** | 5 Epochs, Frozen Features | 89.70% | 88.16% |
+| **Hybrid CNN and SVM System** | LinearSVC, C=0.1 | - | 78.05% |
 
-En başarılı özel tasarım mimarimiz olan Model 2'nin özellik çıkarma kapasitesinden beslenen Model 4 (Hibrit SVM) için elde edilen Sınıflandırma ve Karmaşıklık raporu Tablo 2'de sunulmuştur.
+The Classification Report obtained for the Hybrid CNN and SVM System, powered by the features of the Improved CNN, is provided in Table 2.
 
-**Tablo 2: Hibrit Model (SVM) Sınıflandırma Raporu (Classification Report)**
+**Table 2: Hybrid System Classification Report**
 
-| Sınıf Adı | Precision | Recall | F1-Skoru | Support |
+| Class Name | Precision | Recall | F1-Score | Support |
 | :--- | :---: | :---: | :---: | :---: |
-| 0 Uçak | 0.76 | 0.82 | 0.79 | 1000 |
-| 1 Otomobil | 0.87 | 0.90 | 0.89 | 1000 |
-| 2 Kuş | 0.72 | 0.68 | 0.70 | 1000 |
-| 3 Kedi | 0.60 | 0.61 | 0.61 | 1000 |
-| 4 Geyik | 0.73 | 0.78 | 0.75 | 1000 |
-| 5 Köpek | 0.72 | 0.68 | 0.70 | 1000 |
-| 6 Kurbağa | 0.83 | 0.82 | 0.83 | 1000 |
-| 7 At | 0.84 | 0.80 | 0.82 | 1000 |
-| 8 Gemi | 0.87 | 0.87 | 0.87 | 1000 |
-| 9 Kamyon | 0.85 | 0.85 | 0.85 | 1000 |
+| 0 Airplane | 0.76 | 0.82 | 0.79 | 1000 |
+| 1 Automobile | 0.87 | 0.90 | 0.89 | 1000 |
+| 2 Bird | 0.72 | 0.68 | 0.70 | 1000 |
+| 3 Cat | 0.60 | 0.61 | 0.61 | 1000 |
+| 4 Deer | 0.73 | 0.78 | 0.75 | 1000 |
+| 5 Dog | 0.72 | 0.68 | 0.70 | 1000 |
+| 6 Frog | 0.83 | 0.82 | 0.83 | 1000 |
+| 7 Horse | 0.84 | 0.80 | 0.82 | 1000 |
+| 8 Ship | 0.87 | 0.87 | 0.87 | 1000 |
+| 9 Truck | 0.85 | 0.85 | 0.85 | 1000 |
 
-4. Discussion
+### 4. Discussion
+Based on the experimental results, the following conclusions were reached:
 
-Gerçekleştirilen deneysel sonuçlar, modellerin birbirlerine olan üstünlükleri ve zayıflıkları açısından incelendiğinde şu sonuçlara ulaşılmıştır:
+* **Superiority of Depth:** While the **Base CNN** with two convolutional blocks achieved 73.11% accuracy, the **Improved CNN** reached 81.40% accuracy. This proves that increasing the number of layers allows the model to extract more abstract and high-level features.
+* **Regularization and Generalization:** The combination of Data Augmentation and Dropout successfully balanced training and test accuracy for the **Improved CNN**. The network learned general patterns instead of memorizing, resulting in higher success on unseen data.
+* **Efficiency of the Hybrid System:** Compared to the end-to-end trained **Improved CNN**, the **Hybrid CNN and SVM System** displayed a very close performance of 78.05%. The report indicates high success in classes with sharp geometric lines like automobiles and ships, while it struggled to separate visually similar classes like cats and dogs on a linear plane.
+* **Transfer Learning Comparison:** **Pretrained AlexNet** reached 88.16% accuracy in only 5 epochs. Although this shows the superiority of large-scale pretraining, the 81.40% success of the custom **Improved CNN** is an efficient alternative considering its lower parameter count and training cost.
 
-    Sığ vs. Derin Mimarilerin Üstünlüğü: Yalnızca iki evrişim bloğuna sahip Model 1'in test doğruluğu %73.11 seviyesinde kalırken, 128 filtreli üçüncü bir evrişim bloğu eklenerek derinleştirilen Model 2, %81.40 test doğruluğuna ulaşarak bariz bir üstünlük kurmuştur. Bu durum, katman sayısı arttıkça modelin verideki daha karmaşık, soyut ve üst düzey özellikleri (high-level features) çıkarabildiğini teorik olarak kanıtlamaktadır.
-
-    Düzenlileştirme ve Genelleme Başarısı: Veri artırımı (Data Augmentation) ve Dropout(0.3) kombinasyonu, Model 2'nin eğitim doğruluğu (%78.73) ile test doğruluğu (%81.40) arasındaki dengeyi kusursuz kurmasını sağlamıştır. Ağ ezberlemek yerine genel kalıpları öğrenmeye zorlanmış, bu sayede daha önce hiç görmediği verilerde daha yüksek başarı elde etmiştir.
-
-    Hibrit Modelin Etkinliği: Uçtan uca (end-to-end) eğitilen Model 2'ye (%81.40) karşılık, bu modelden ayrıştırılan özelliklerin klasik bir makine öğrenmesi modeli olan SVM ile sınıflandırılması (Model 4) oldukça yakın bir performans (%78.05) sergilemiştir. Sınıflandırma raporu incelendiğinde otomobil ve gemi (F1: 0.89, 0.87) gibi keskin geometrik hatlara sahip sınıflarda hibrit sistem çok başarılı olurken; kedi ve köpek (F1: 0.61, 0.70) gibi özellikleri birbirine daha çok benzeyen sınıfları doğrusal (linear) bir düzlemde ayırmakta zorlanmıştır.
-
-    Transfer Öğrenme ve Maliyet Karşılaştırması: ImageNet gibi devasa bir veri setiyle eğitilmiş olan AlexNet, çok düşük öğrenme hızlarında ve yalnızca 5 epoch içerisinde %88.16 gibi bir başarıya ulaşmıştır. Bu durum derin mimarilerin literatürdeki mutlak üstünlüğünü gösterse de, kendi geliştirdiğimiz Model 2'nin parametre sayısının azlığı ve eğitim maliyetinin düşüklüğü göz önüne alındığında %81.40'lık başarısı oldukça verimli ve akademik açıdan başarılı bir alternatiftir.
-
-5. References
-
-    Krizhevsky, A., Sutskever, I., & Hinton, G. E. (2012). ImageNet classification with deep convolutional neural networks. Advances in neural information processing systems, 25.
-
-    PyTorch Documentation. (2026). Models and pre-trained weights. Retrieved from https://pytorch.org/vision/0.9/models.html
-
-    Pedregosa, F. et al. (2011). Scikit-learn: Machine Learning in Python. JMLR 12, pp. 2825-2830.
+### 5. References
+Krizhevsky, A., Sutskever, I., & Hinton, G. E. (2012). ImageNet classification with deep convolutional neural networks. *Advances in Neural Information Processing Systems*, 25.
+PyTorch Documentation. (2026). *Models and pre-trained weights*. Retrieved from https://pytorch.org/vision/0.9/models.html
+Pedregosa, F. et al. (2011). Scikit-learn: Machine Learning in Python. *Journal of Machine Learning Research (JMLR)*, 12, pp. 2825-2830.
