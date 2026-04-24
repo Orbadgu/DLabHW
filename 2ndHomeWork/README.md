@@ -1,19 +1,7 @@
-Öncelikle harika bir detay yakaladın! Tabloda Hibrit Model için "Değerlendirilmedi" yazmasının çok teknik ve geçerli bir sebebi var:
-
-İlk 3 modelimiz (Base CNN, Improved CNN ve AlexNet) Derin Öğrenme (Deep Learning) modelleridir. Bunlar "epoch" adı verilen döngülerle eğitilir ve biz her döngüde modelin hem eğitim verisindeki (Train Acc) hem de test verisindeki (Test Acc) performansını anlık olarak ölçüp konsola yazdırdık.
-
-Ancak 4. Modelimiz olan Hibrit Model (Linear SVM) klasik bir Makine Öğrenmesi (Machine Learning) algoritmasıdır (scikit-learn kütüphanesi). SVM, veriyi epoch'lar halinde değil, tek bir seferde matematiksel bir düzlem (hyperplane) çizerek ayırır (clf.fit). Kodumuzda SVM'i eğitirken sadece test verisi üzerindeki başarısını (clf.predict(X_test)) ölçüp yazdırdık, eğitim verisini ne kadar ezberlediğini (X_train tahmini) konsola yazdırmadık. SVM'ler genellikle eğitim verisinde %95-100 arası çok yüksek başarılar gösterir, asıl önemli olan test verisindeki gücüdür. Bu yüzden o kısım boş kaldı.
-
-Şimdi gelelim asıl önemli kısma: Proje Raporu.
-
-Hocanın proje belgesinde belirttiği IMRAD formatını , teorik açıklamaları ve tablo zorunluluğunu  harfiyen yerine getiren, elde ettiğimiz bu muazzam %81.40'lık sonuca yakışır o profesyonel raporu aşağıda hazırladım.
-
-(Not: Raporun "Sonuçlar" kısmında senden projenin içine eklemeni istediğim bir "Loss Grafiği" görsel alanı bıraktım. Eğer PyCharm'da matplotlib ile kayıp grafiği çizdirmediysen, sadece o görsel ekleme satırını silebilirsin, eklediğimiz karmaşıklık matrisi tablosu  hocanın "tablo ya da grafik" şartını zaten fazlasıyla karşılıyor.)
-YZM304 Derin Öğrenme Dersi Proje 2: CNN ile Özellik Çıkarma ve Sınıflandırma
-1. Giriş (Introduction)
+1.Introduction
 
 Bu çalışmada, Evrişimli Sinir Ağları (CNN) kullanılarak görüntü verileri üzerinden özellik çıkarma ve sınıflandırma işlemleri gerçekleştirilmiştir. Problem için 10 farklı nesne sınıfı içeren CIFAR-10 benchmark veri seti seçilmiştir. Çalışma kapsamında; sıfırdan tasarlanan temel bir LeNet-5 benzeri mimari, hiperparametreleri optimize edilip derinleştirilmiş bir versiyonu ve literatürde kendini kanıtlamış AlexNet mimarisi transfer öğrenme yöntemiyle karşılaştırmalı olarak analiz edilmiştir. Ayrıca, tam bir CNN mimarisinin özellik çıkarımı mekanizması kullanılarak elde edilen özellik setleri kanonik bir makine öğrenmesi modeli (Destek Vektör Makineleri) ile eğitilmiş ve hibrit bir sınıflandırma sistemi tasarlanmıştır. Bu rapor, geliştirilen modellerin teorik altyapılarını, deneysel sonuçlarını ve birbirlerine karşı olan üstünlüklerini incelemektedir.
-2. Yöntem (Method)
+2.Method
 
 Proje, tekrarlanabilirlik ilkesine uygun olarak tasarlanmış ve veri seti GitHub deposunda barındırılmak yerine kod çalıştığı anda dinamik olarak indirilecek şekilde yapılandırılmıştır.
 
@@ -30,7 +18,7 @@ Proje, tekrarlanabilirlik ilkesine uygun olarak tasarlanmış ve veri seti GitHu
     Model 4 (Hibrit Sistem - CNN + SVM): Model 2'nin özellik çıkarma kısmından (Flatten sonrası) geçen tensörler npy formatında (Eğitim: 50000x2048, Test: 10000x2048) diske kaydedilmiştir. Bu vektörler, doğrusal (linear) bir karar sınırı çizen ve büyük veri setleri için optimize edilmiş LinearSVC (Destek Vektör Makineleri) algoritmasına beslenerek sınıflandırma yapılmıştır.
 
 2.3. Eğitim Parametreleri: Modeller CPU ortamında, çapraz entropi (CrossEntropyLoss) kayıp fonksiyonu ve Adam optimizasyon algoritması kullanılarak 30 epoch boyunca eğitilmiştir. Ağların kayıp yüzeyinde daha kararlı ilerlemesi için her 10 epoch'ta öğrenme hızını (başlangıç: 0.001) yarıya düşüren StepLR zamanlayıcısı kullanılmıştır.
-3. Sonuçlar (Results)
+3.Results
 
 Modellerin eğitim süreçleri sonundaki doğruluk oranları Tablo 1'de sunulmuştur. AlexNet mimarisi, önceden eğitilmiş ağırlıklarının bozulmaması amacıyla yalnızca 5 epoch eğitilmiştir.
 
@@ -44,7 +32,7 @@ Model 4 (Hibrit: CNN + SVM)	LinearSVC (C=0.1)	-	%78.05
 En başarılı özel tasarım mimarimiz olan Model 2'nin özellik çıkarma kapasitesinden beslenen Model 4 (Hibrit SVM) için elde edilen Sınıflandırma ve Karmaşıklık raporu Tablo 2'de sunulmuştur.
 
 Tablo 2: Hibrit Model (SVM) Sınıflandırma Raporu (Classification Report)
-Sınıf Adı	Hassasiyet (Precision)	Duyarlılık (Recall)	F1-Skoru	Destek (Support)
+Sınıf Adı	Precision	Recall	F1-Skoru	Support
 0 (Uçak)	0.76	0.82	0.79	1000
 1 (Otomobil)	0.87	0.90	0.89	1000
 2 (Kuş)	0.72	0.68	0.70	1000
@@ -56,8 +44,7 @@ Sınıf Adı	Hassasiyet (Precision)	Duyarlılık (Recall)	F1-Skoru	Destek (Suppo
 8 (Gemi)	0.87	0.87	0.87	1000
 9 (Kamyon)	0.85	0.85	0.85	1000
 
-(Eğer grafiğin varsa bu satırın altına ekleyebilirsin, örneğin: ![Loss Grafiği](grafik_linki_veya_dosya_yolu) )
-4. Tartışma (Discussion)
+4.Discussion
 
 Gerçekleştirilen deneysel sonuçlar, modellerin birbirlerine olan üstünlükleri ve zayıflıkları açısından incelendiğinde şu sonuçlara ulaşılmıştır:
 
