@@ -58,9 +58,8 @@ def extract_features(model, dataloader, device, save_prefix="train"):
     with torch.no_grad():
         for inputs, labels in tqdm(dataloader, desc=f"Extracting {save_prefix} features"):
             inputs = inputs.to(device)
-            # Özellik çıkarıcı kısmı kullan (Sınıflandırıcıdan hemen öncesi)
             features = model.features(inputs)
-            features = features.view(features.size(0), -1)  # Flatten
+            features = features.view(features.size(0), -1)
 
             features_list.append(features.cpu().numpy())
             labels_list.append(labels.numpy())
