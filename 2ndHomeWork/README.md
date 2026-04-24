@@ -56,5 +56,7 @@ Based on the experimental results, the following conclusions were reached:
 
 ### 5. References
 Krizhevsky, A., Sutskever, I., & Hinton, G. E. (2012). ImageNet classification with deep convolutional neural networks. *Advances in Neural Information Processing Systems*, 25.
+
 PyTorch Documentation. (2026). *Models and pre-trained weights*. Retrieved from https://pytorch.org/vision/0.9/models.html
+
 Pedregosa, F. et al. (2011). Scikit-learn: Machine Learning in Python. *Journal of Machine Learning Research (JMLR)*, 12, pp. 2825-2830.
