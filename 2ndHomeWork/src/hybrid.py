@@ -11,7 +11,6 @@ def train_hybrid_svm():
     y_test = np.load('features/y_test.npy')
 
     print("Training Linear SVM... (Optimized for large datasets)")
-    # C=0.1 eklendi, iterasyon sayısı artırıldı
     clf = LinearSVC(C=0.1, max_iter=2000, dual=False)
     clf.fit(X_train, y_train)
 
