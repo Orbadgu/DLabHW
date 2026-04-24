@@ -48,7 +48,7 @@ En başarılı özel tasarım mimarimiz olan Model 2'nin özellik çıkarma kapa
 | 8 Gemi | 0.87 | 0.87 | 0.87 | 1000 |
 | 9 Kamyon | 0.85 | 0.85 | 0.85 | 1000 |
 
-4.Discussion
+4. Discussion
 
 Gerçekleştirilen deneysel sonuçlar, modellerin birbirlerine olan üstünlükleri ve zayıflıkları açısından incelendiğinde şu sonuçlara ulaşılmıştır:
 
@@ -60,7 +60,7 @@ Gerçekleştirilen deneysel sonuçlar, modellerin birbirlerine olan üstünlükl
 
     Transfer Öğrenme ve Maliyet Karşılaştırması: ImageNet gibi devasa bir veri setiyle eğitilmiş olan AlexNet, çok düşük öğrenme hızlarında ve yalnızca 5 epoch içerisinde %88.16 gibi bir başarıya ulaşmıştır. Bu durum derin mimarilerin literatürdeki mutlak üstünlüğünü gösterse de, kendi geliştirdiğimiz Model 2'nin parametre sayısının azlığı ve eğitim maliyetinin düşüklüğü göz önüne alındığında %81.40'lık başarısı oldukça verimli ve akademik açıdan başarılı bir alternatiftir.
 
-5. Referanslar (References)
+5. References
 
     Krizhevsky, A., Sutskever, I., & Hinton, G. E. (2012). ImageNet classification with deep convolutional neural networks. Advances in neural information processing systems, 25.
 
