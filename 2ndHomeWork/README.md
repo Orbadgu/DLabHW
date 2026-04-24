@@ -22,27 +22,31 @@ Proje, tekrarlanabilirlik ilkesine uygun olarak tasarlanmış ve veri seti GitHu
 
 Modellerin eğitim süreçleri sonundaki doğruluk oranları Tablo 1'de sunulmuştur. AlexNet mimarisi, önceden eğitilmiş ağırlıklarının bozulmaması amacıyla yalnızca 5 epoch eğitilmiştir.
 
-Tablo 1: Modellerin Test ve Eğitim Doğruluk Oranları
-Model	Parametre Optimizasyonu	Eğitim Doğruluğu	Test Doğruluğu
-Model 1 (Base CNN)	30 Epoch, StepLR	%71.30	%73.11
-Model 2 (Improved CNN)	30 Epoch, StepLR	%78.73	%81.40
-Model 3 (AlexNet)	5 Epoch (Frozen Features)	%89.70	%88.16
-Model 4 (Hibrit: CNN + SVM)	LinearSVC (C=0.1)	-	%78.05
+**Tablo 1: Modellerin Test ve Eğitim Doğruluk Oranları**
+
+| Model | Parametre Optimizasyonu | Eğitim Doğruluğu | Test Doğruluğu |
+| :--- | :--- | :---: | :---: |
+| **Model 1 (Base CNN)** | 30 Epoch, StepLR | %71.30 | %73.11 |
+| **Model 2 (Improved CNN)** | 30 Epoch, StepLR | %78.73 | %81.40 |
+| **Model 3 (AlexNet)** | 5 Epoch (Frozen Features) | %89.70 | %88.16 |
+| **Model 4 (Hibrit: CNN + SVM)** | LinearSVC (C=0.1) | - | %78.05 |
 
 En başarılı özel tasarım mimarimiz olan Model 2'nin özellik çıkarma kapasitesinden beslenen Model 4 (Hibrit SVM) için elde edilen Sınıflandırma ve Karmaşıklık raporu Tablo 2'de sunulmuştur.
 
-Tablo 2: Hibrit Model (SVM) Sınıflandırma Raporu (Classification Report)
-Sınıf Adı	Precision	Recall	F1-Skoru	Support
-0 (Uçak)	0.76	0.82	0.79	1000
-1 (Otomobil)	0.87	0.90	0.89	1000
-2 (Kuş)	0.72	0.68	0.70	1000
-3 (Kedi)	0.60	0.61	0.61	1000
-4 (Geyik)	0.73	0.78	0.75	1000
-5 (Köpek)	0.72	0.68	0.70	1000
-6 (Kurbağa)	0.83	0.82	0.83	1000
-7 (At)	0.84	0.80	0.82	1000
-8 (Gemi)	0.87	0.87	0.87	1000
-9 (Kamyon)	0.85	0.85	0.85	1000
+**Tablo 2: Hibrit Model (SVM) Sınıflandırma Raporu (Classification Report)**
+
+| Sınıf Adı | Precision | Recall | F1-Skoru | Support |
+| :--- | :---: | :---: | :---: | :---: |
+| 0 (Uçak) | 0.76 | 0.82 | 0.79 | 1000 |
+| 1 (Otomobil) | 0.87 | 0.90 | 0.89 | 1000 |
+| 2 (Kuş) | 0.72 | 0.68 | 0.70 | 1000 |
+| 3 (Kedi) | 0.60 | 0.61 | 0.61 | 1000 |
+| 4 (Geyik) | 0.73 | 0.78 | 0.75 | 1000 |
+| 5 (Köpek) | 0.72 | 0.68 | 0.70 | 1000 |
+| 6 (Kurbağa) | 0.83 | 0.82 | 0.83 | 1000 |
+| 7 (At) | 0.84 | 0.80 | 0.82 | 1000 |
+| 8 (Gemi) | 0.87 | 0.87 | 0.87 | 1000 |
+| 9 (Kamyon) | 0.85 | 0.85 | 0.85 | 1000 |
 
 4.Discussion
 
